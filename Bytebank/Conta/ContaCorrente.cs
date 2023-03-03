@@ -10,8 +10,9 @@ namespace Bytebank.Conta
     public class ContaCorrente
     {
         public static int TotalDeContasCriadas { get; private set; }
-        private int numero_agencia;
+        public static float TaxaOperacao { get; private set; }
 
+        private int numero_agencia;
         public int Numero_Agencia
         {
             get { return this.numero_agencia; }
@@ -26,9 +27,22 @@ namespace Bytebank.Conta
 
         //private string conta;
         public string Conta { get; set; }
+
         private double saldo = 100;
         public Cliente Titular { get; set; }
 
+        public ContaCorrente(int numero_agencia, string numero_conta)
+        {
+            numero_agencia = numero_agencia;
+            Conta = numero_conta;
+
+            if (numero_agencia <= 0)
+            {
+                throw new ArgumentException("Número de agência menor ou igual a zero!", nameof(numero_agencia));
+            }
+
+            TotalDeContasCriadas++;
+        }
 
         public void Depositar(double valor)
         {
@@ -44,7 +58,7 @@ namespace Bytebank.Conta
             }
             else
             {
-                return false;
+                throw new SaldoInsuficienteException("Saldo insuficiente para a operação.");
             }
         }
 
@@ -92,11 +106,6 @@ namespace Bytebank.Conta
             return this.saldo;
         }
 
-        public ContaCorrente(int numero_agencia, string numero_conta)
-        {
-            this.Numero_Agencia = numero_agencia;
-            this.Conta = numero_conta;
-            TotalDeContasCriadas++;
-        }
+        
     }
 }
